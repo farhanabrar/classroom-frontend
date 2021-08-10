@@ -1,0 +1,196 @@
+<template>
+  <div class="card text-">
+    <div class="card-header">
+      <img :src="img" class="card-img-top" alt="kelas" />
+    </div>
+    <div class="card-body">
+      <h4 class="card-title">{{ title }}</h4>
+      <slot name="body"></slot>
+      <p>diikuti oleh {{ peserta }} peserta</p>
+      <p>memilik {{ jml }} pertemuan</p>
+    </div>
+    <div class="card-footer text-muted">
+      <button class="btn btn-primary" v-if="!join" @click="showJoin">
+        ikuti
+      </button>
+      <nuxt-link :to="'/class/' + id" class="text-decoration-none">
+        <button class="btn btn-secondary" v-if="join" disabled>
+          go to class
+        </button>
+      </nuxt-link>
+      <slot name="footer"></slot>
+    </div>
+    <modal :name="'modal-' + id" height="auto">
+      <div class="example-modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title">Pilih Role untuk kelas {{ title }}</h3>
+        </div>
+        <div class="modal-body">
+          <form @submit.prevent="editSchedule">
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="firstchoice"
+                id="SPV"
+                value="SPV"
+                v-model="join_class.role"
+              />
+              <label class="form-check-label" for="SPV"><h4>SPV</h4> </label>
+              <br />
+              <input
+                class="form-check-input"
+                type="radio"
+                name="secondchoice"
+                id="tutor"
+                value="tutor"
+                v-model="join_class.role"
+              />
+              <label class="form-check-label" for="tutor"
+                ><h4>tutor</h4>
+              </label>
+              <br />
+              <input
+                class="form-check-input"
+                type="radio"
+                name="thirdchoice"
+                id="student"
+                value="student"
+                checked
+                v-model="join_class.role"
+              />
+              <label class="form-check-label" for="student"
+                ><h4>student</h4>
+              </label>
+              <h3>role: {{ join_class.role }}</h3>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-dismiss="modal"
+            @click="hideJoin"
+          >
+            Close
+          </button>
+          <button type="button" class="btn btn-primary" @click="joinclass">
+            JOIN
+          </button>
+        </div>
+      </div>
+    </modal>
+  </div>
+</template>
+
+<script>
+import request from "~/mixins/request";
+import { mapMutations, mapActions } from 'vuex';
+export default {
+  mixins: [request],
+  data() {
+    return {
+      join: this.isJoin(),
+      join_class: {
+        classID: this.id,
+        userID: this.$auth.user.id,
+        role: "",
+      },
+    };
+  },
+  props: {
+    img: {
+      type: String,
+      default:
+        "https://shiftacademy.id/wp-content/uploads/2020/12/Logo-fullstack-SA.png ",
+    },
+    title: {
+      type: String,
+      default: "",
+    },
+    jml: {
+      type: Number,
+      default: 0,
+    },
+    peserta: {
+      type: Number,
+      default: 0,
+    },
+    id: {
+      type: String,
+      default: "",
+    },
+  },
+  
+  methods: {
+    isJoin() {
+      const JoinClass = this.$auth.user.Join_classes;
+      const ikut = JoinClass.map((kelas) => {
+        return {
+          id: kelas.MyClass.id,
+        };
+      });
+      const isEqual = (first, second) => {
+        return JSON.stringify(first) === JSON.stringify(second);
+      };
+      const result = ikut.some((e) => isEqual(e, { id: this.id }));
+      return result;
+    },
+    async joinclass() {
+      try {
+        const join = await this.$axios.$post(
+          "http://localhost:4000/JoinClass",
+          {
+            classId: this.join_class.classID,
+            userId: this.join_class.userID,
+            role: this.join_class.role,
+          }
+        );
+        console.log(join);
+        if (join.success) {
+          this.$swal(
+            "berhasil mengikut kelas sebagai " + this.join_class.role,
+            "",
+            "success"
+          );
+          this.allClass();
+          this.$modal.hide("modal-" + this.id);
+        }
+      } catch (error) {
+        console.log(join);
+      }
+    },
+    async allClass() {
+      const req = await this.$axios.$get(
+        "http://localhost:4000/myClass/allClass"
+      );
+      const datastate = req.data.map((kelas) => {
+        return {
+          id: kelas.id,
+          name: kelas.name,
+          description: kelas.description,
+          role: kelas.Join_classes.role,
+          Schedules: kelas.Schedules,
+          Join_classes: kelas.Join_classes,
+        };
+      });
+      //this.setClass(req.data)
+      this.$store.dispatch("myClass/setClass", datastate);
+      console.log(datastate);
+    },
+    ...mapMutations({
+      setClass:'myClass/setClass',
+    }),
+    ...mapActions({
+      setCLass:"myClass/setClass",
+    }),
+    showJoin() {
+      this.$modal.show("modal-" + this.id);
+    },
+    hideJoin() {
+      this.$modal.hide("modal-" + this.id);
+    },
+  },
+};
+</script>

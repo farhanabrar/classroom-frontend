@@ -1,0 +1,25 @@
+API semua list kelas : done
+tampilan list semua kelas: done
+api kelas yang diikuti user: done
+tampilan kelas yag diikuti user: done
+API login and register : done
+halaman login dan register: done
+API get schedule pada kelas: done
+menampilkan jadwal schedule kelas : done
+API CRUD schedule : done
+tampilan CRUD schedule : tinggal edit dan delete 
+API materi : done
+tampilan CRUD materi : create (done), edit dan delete done
+menampilkan matei per schedule: done
+API presensi: belom
+tampilan QR code spv: belom
+tampilan scanner QR code tutor: belom
+
+todo list:
+multi role untuk masuk ke kelas supaya bisa melakukan CRUD (untuk role selain student): done
+presensi
+membuat fitur mengikuti join kelas jika belum mengikuti : done
+menampilkan tombol "join" hanya jika user belum join kelas tersebut: done
+
+trouble: 
+melakukan request ulang jika baru join class untuk mengupdate state 
