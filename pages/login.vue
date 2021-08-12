@@ -50,14 +50,18 @@ export default {
       try {
         let { data } = await this.$auth.loginWith("local", {
           data: this.login,
+        
         });
-        // console.log(data)
+        
         if (data.success) {
           this.$swal("Login Berhasil", "welcome to classroom", "success");
           this.$router.push("/");
         }
-      } catch (err) {
-        console.log(err);
+        else{
+          this.$swal("login gagal", data.message, "error");
+        }
+      } catch {
+        console.log(data.massage);
       }
     },
   },
