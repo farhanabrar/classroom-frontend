@@ -18,7 +18,7 @@
             </a>
           </li>
         </ul>
-        <!-- <div class="search-element">
+        <div class="search-element">
           <input
             class="form-control"
             type="search"
@@ -102,7 +102,7 @@
               </a>
             </div>
           </div>
-        </div> -->
+        </div>
       </form>
       <ul class="navbar-nav navbar-right">
         <li class="dropdown dropdown-list-toggle">
@@ -313,8 +313,8 @@
 export default {
   methods: {
     logout() {
-      this.$auth.logout();
       this.$router.push("/login");
+      this.$auth.logout();
     }
   }
 }

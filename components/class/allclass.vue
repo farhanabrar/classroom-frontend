@@ -86,7 +86,6 @@
 
 <script>
 import request from "~/mixins/request";
-import { mapMutations, mapActions } from 'vuex';
 export default {
   mixins: [request],
   data() {
@@ -122,7 +121,6 @@ export default {
       default: "",
     },
   },
-  
   methods: {
     isJoin() {
       const JoinClass = this.$auth.user.Join_classes;
@@ -154,37 +152,14 @@ export default {
             "",
             "success"
           );
-          this.allClass();
           this.$modal.hide("modal-" + this.id);
+          this.isJoin();
         }
       } catch (error) {
         console.log(join);
       }
     },
-    async allClass() {
-      const req = await this.$axios.$get(
-        "http://localhost:4000/myClass/allClass"
-      );
-      const datastate = req.data.map((kelas) => {
-        return {
-          id: kelas.id,
-          name: kelas.name,
-          description: kelas.description,
-          role: kelas.Join_classes.role,
-          Schedules: kelas.Schedules,
-          Join_classes: kelas.Join_classes,
-        };
-      });
-      //this.setClass(req.data)
-      this.$store.dispatch("myClass/setClass", datastate);
-      console.log(datastate);
-    },
-    ...mapMutations({
-      setClass:'myClass/setClass',
-    }),
-    ...mapActions({
-      setCLass:"myClass/setClass",
-    }),
+    
     showJoin() {
       this.$modal.show("modal-" + this.id);
     },

@@ -12,9 +12,7 @@
 
 <script>
 import { mapMutations, mapActions } from 'vuex'
-// import request from "~/mixins/request";
 export default {
-  // mixins: [request],
   asyncData({store}) {
     return {
       listClass: store.state.myClass.listClass,
@@ -31,8 +29,7 @@ export default {
             Schedules: kelas.Schedules,
             Join_classes: kelas.Join_classes,
       }
-    })
-    
+    });
     this.$store.dispatch("myClass/setClass", datastate);
     console.log(datastate);
   },
@@ -41,7 +38,7 @@ export default {
       setClass:'myClass/setClass',
     }),
     ...mapActions({
-      setCLass:"myClass/setClass",
+      setClass:"myClass/setClass",
     }),
     
   },

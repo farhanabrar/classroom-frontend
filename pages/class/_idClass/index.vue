@@ -168,7 +168,6 @@ export default {
       });
       if (req.success) {
         this.$store.dispatch("schedule/setList", req.data);
-        // console.log(req.data);
       }
     },
     showMod() {
