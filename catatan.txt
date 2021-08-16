@@ -20,6 +20,8 @@ multi role untuk masuk ke kelas supaya bisa melakukan CRUD (untuk role selain st
 presensi
 membuat fitur mengikuti join kelas jika belum mengikuti : done
 menampilkan tombol "join" hanya jika user belum join kelas tersebut: done
+ngulik tentang JWT
 
 trouble: 
 melakukan request ulang jika baru join class untuk mengupdate state 
+

@@ -86,6 +86,7 @@
 
 <script>
 import request from "~/mixins/request";
+import {mapMutations} from "vuex";
 export default {
   mixins: [request],
   data() {
@@ -121,6 +122,7 @@ export default {
       default: "",
     },
   },
+
   methods: {
     isJoin() {
       const JoinClass = this.$auth.user.Join_classes;
@@ -153,13 +155,13 @@ export default {
             "success"
           );
           this.$modal.hide("modal-" + this.id);
-          this.isJoin();
+          location.reload();
+          
         }
       } catch (error) {
         console.log(join);
       }
     },
-    
     showJoin() {
       this.$modal.show("modal-" + this.id);
     },
@@ -167,5 +169,6 @@ export default {
       this.$modal.hide("modal-" + this.id);
     },
   },
+  
 };
 </script>
