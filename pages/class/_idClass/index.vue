@@ -116,7 +116,7 @@ export default {
     ) {
       const { data } = await this.requestGet({
         endpoint: "myClass",
-        params: { id: this.$route.params.idClass, user_id: this.$auth.user.id },
+        params: { id: this.$route.params.idClass},
       });
       console.log(data[0]);
       const datastate = data.map((kelas) => {
