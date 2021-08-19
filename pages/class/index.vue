@@ -31,7 +31,7 @@ export default {
       }
     });
     this.$store.dispatch("myClass/setClass", datastate);
-    console.log(datastate);
+    // console.log(datastate);
   },
   methods: {
     ...mapMutations({

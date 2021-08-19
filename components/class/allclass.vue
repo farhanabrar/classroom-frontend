@@ -8,16 +8,14 @@
       <slot name="body"></slot>
       <p>diikuti oleh {{ peserta }} peserta</p>
       <p>memilik {{ jml }} pertemuan</p>
+     
     </div>
     <div class="card-footer text-muted">
-      <button class="btn btn-primary" v-if="!join" @click="showJoin">
-        ikuti
-      </button>
-      <nuxt-link :to="'/class/' + id" class="text-decoration-none">
-        <button class="btn btn-secondary" v-if="join" disabled>
-          go to class
-        </button>
-      </nuxt-link>
+      
+        <nuxt-link :to="'/class/' + id" class="text-decoration-none">
+          <button class="btn btn-secondary" v-if="isJoin">goto class</button>
+        </nuxt-link>
+        <button class="btn btn-primary" @click="showJoin" v-if="!isJoin">ikuti</button>
       <slot name="footer"></slot>
     </div>
     <modal :name="'modal-' + id" height="auto">
@@ -85,13 +83,12 @@
 </template>
 
 <script>
-import request from "~/mixins/request";
-import {mapMutations} from "vuex";
+// import request from "~/mixins/request";
+import { mapMutations, mapActions } from "vuex";
 export default {
-  mixins: [request],
+  // mixins: [request],
   data() {
     return {
-      join: this.isJoin(),
       join_class: {
         classID: this.id,
         userID: this.$auth.user.id,
@@ -123,20 +120,27 @@ export default {
     },
   },
 
-  methods: {
+  async fetch() {
+    const JC = await this.$axios.$get("http://localhost:4000/JoinClass");
+    const datastate = JC.data.map((kelas) => {
+      return {
+        id: kelas.MyClass.id,
+      };
+    });
+    this.$store.dispatch("isjoin/setclassID", datastate);
+  },
+  computed: {
     isJoin() {
-      const JoinClass = this.$auth.user.Join_classes;
-      const ikut = JoinClass.map((kelas) => {
-        return {
-          id: kelas.MyClass.id,
-        };
-      });
       const isEqual = (first, second) => {
         return JSON.stringify(first) === JSON.stringify(second);
       };
-      const result = ikut.some((e) => isEqual(e, { id: this.id }));
+      const verify = this.$store.state.isjoin.classID;
+      const result = verify.some((e) => isEqual(e, { id: this.id }));
+      // console.log(result);
       return result;
     },
+  },
+  methods: {
     async joinclass() {
       try {
         const join = await this.$axios.$post(
@@ -155,8 +159,14 @@ export default {
             "success"
           );
           this.$modal.hide("modal-" + this.id);
-          location.reload();
-          
+          this.isJoin();
+        }
+        else {
+          this.$swal(
+            "gagal mengikut kelas sebagai ",
+            "",
+            "error"
+          );
         }
       } catch (error) {
         console.log(join);
@@ -168,7 +178,7 @@ export default {
     hideJoin() {
       this.$modal.hide("modal-" + this.id);
     },
+   
   },
-  
 };
 </script>

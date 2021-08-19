@@ -129,7 +129,7 @@ export default {
         };
       });
       this.set_current_class(datastate[0]);
-      console.log(datastate[0]);
+      // console.log(datastate[0]);
     }
     this.getSchedule();
   },

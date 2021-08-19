@@ -42,7 +42,7 @@ export default {
   async fetch() {
     const req = await this.$axios.$get("http://localhost:4000/JoinClass");
     this.$store.dispatch("joinclass/setmyclass", req.data);
-    console.log(req.data);
+    // console.log(req.data);
   },
   // computed akan tertrigger jika ada perubahan data
   computed: {
