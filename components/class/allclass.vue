@@ -1,25 +1,27 @@
 <template>
-  <div class="card text-">
-    <div class="card-header">
-      <img :src="img" class="card-img-top" alt="kelas" />
-    </div>
-    <div class="card-body">
-      <h4 class="card-title">{{ title }}</h4>
-      <slot name="body"></slot>
-      <p>diikuti oleh {{ peserta }} peserta</p>
-      <p>memilik {{ jml }} pertemuan</p>
-     
-    </div>
-    <div class="card-footer text-muted">
-      
+  <div>
+    <div class="card text-">
+      <div class="card-header">
+        <img :src="img" class="card-img-top" alt="kelas" />
+      </div>
+      <div class="card-body">
+        <h4 class="card-title">{{ title }}</h4>
+        <slot name="body"></slot>
+        <p>diikuti oleh {{ peserta }} peserta</p>
+        <p>memilik {{ jml }} pertemuan</p>
+      </div>
+      <div class="card-footer text-muted">
         <nuxt-link :to="'/class/' + id" class="text-decoration-none">
           <button class="btn btn-secondary" v-if="isJoin">goto class</button>
         </nuxt-link>
-        <button class="btn btn-primary" @click="showJoin" v-if="!isJoin">ikuti</button>
-      <slot name="footer"></slot>
+        <button class="btn btn-primary" @click="showJoin" v-if="!isJoin">
+          ikuti
+        </button>
+        <slot name="footer"></slot>
+      </div>
     </div>
-    <modal :name="'modal-' + id" height="auto">
-      <div class="example-modal-content">
+    <modal :name="'modal-' + id" height="auto" class="example-modal-content-centered">
+      
         <div class="modal-header">
           <h3 class="modal-title">Pilih Role untuk kelas {{ title }}</h3>
         </div>
@@ -77,7 +79,7 @@
             JOIN
           </button>
         </div>
-      </div>
+      
     </modal>
   </div>
 </template>
@@ -89,6 +91,7 @@ export default {
   // mixins: [request],
   data() {
     return {
+      
       join_class: {
         classID: this.id,
         userID: this.$auth.user.id,
@@ -160,13 +163,8 @@ export default {
           );
           this.$modal.hide("modal-" + this.id);
           this.isJoin();
-        }
-        else {
-          this.$swal(
-            "gagal mengikut kelas sebagai ",
-            "",
-            "error"
-          );
+        } else {
+          this.$swal("gagal mengikut kelas sebagai ", "", "error");
         }
       } catch (error) {
         console.log(join);
@@ -178,7 +176,6 @@ export default {
     hideJoin() {
       this.$modal.hide("modal-" + this.id);
     },
-   
   },
 };
 </script>
